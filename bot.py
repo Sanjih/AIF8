@@ -58,7 +58,7 @@ async def start(message: types.Message):
     score = user_scores.get(user_id, 0)
     
     # METS L'URL DE TA BANNIERE ICI (image hightech de 1200x600px)
-    BANNER_URL = "https://REMPLACE_PAR_TON_IMAGE.com/banner.png" 
+    BANNER_URL = "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1200" 
     
     # Texte formaté sous l'image
     caption_text = (
