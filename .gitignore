@@ -1,0 +1,6 @@
+# Ignorer l'environnement virtuel
+venv/
+__pycache__/
+
+# IGNORER LE FICHIER DE CONFIG QUI CONTIENT LES CLÉS API !
+backend/config.py
