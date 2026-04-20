@@ -24,3 +24,6 @@ def generate_output(prompt: str) -> str:
     result = response.json()
 
     return result["choices"][0]["message"]["content"]
+    
+    if response.status_code != 200:
+    raise Exception(f"API Error: {response.text}")
