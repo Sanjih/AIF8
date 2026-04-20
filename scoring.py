@@ -44,9 +44,11 @@ Give 2 actionable improvements.
     }
 
     response = requests.post(OPENROUTER_URL, headers=HEADERS, json=data)
-    result = response.json()
-
-    return result["choices"][0]["message"]["content"]
-
+    
+    # 1. On vérifie l'erreur AVANT de lire la réponse
     if response.status_code != 200:
-    raise Exception(f"API Error: {response.text}")
+        raise Exception(f"API Error: {response.text}")
+
+    # 2. Si c'est bon (200), on lit le JSON et on le retourne
+    result = response.json()
+    return result["choices"][0]["message"]["content"]
