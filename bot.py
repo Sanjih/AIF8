@@ -11,7 +11,7 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 user_state = {}
-# Dictionnaire temporaire pour simuler le score utilisateur (à remplacer par une vraie BDD plus tard)
+# Dictionnaire temporaire pour les scores (sera remplacé par une BDD plus tard)
 user_scores = {}
 
 CHALLENGE = """
@@ -25,42 +25,65 @@ Write a simple sales page for an ebook called
 'Learn ChatGPT in 7 days'.
 """
 
+
 # ==========================================
-# 2. MENU PRINCIPAL (Clavier)
+# 1. MENU PRINCIPAL (Clavier)
 # ==========================================
 def home_keyboard():
     kb = [
-        [InlineKeyboardButton(text="⚔️ Fight", callback_data="menu_fight")],
+        # Bouton principal mis en valeur
+        [InlineKeyboardButton(text="🚀 Enter the Arena", callback_data="menu_fight")],
+        
+        # Boutons secondaires sur la même ligne
         [
-            InlineKeyboardButton(text="📊 Stats", callback_data="menu_stats"),
+            InlineKeyboardButton(text="📊 My Stats", callback_data="menu_stats"),
             InlineKeyboardButton(text="🏆 Leaderboard", callback_data="menu_leaderboard")
         ],
-        [InlineKeyboardButton(text="📅 Daily Challenge", callback_data="menu_daily")]
+        
+        # Bouton défi quotidien
+        [InlineKeyboardButton(text="📅 Daily Challenge", callback_data="menu_daily")],
+        
+        # Bouton qui ouvre un lien web externe (Style ChainGPT)
+        [InlineKeyboardButton(text="🌐 Web Version", url="https://REMPLACE_PAR_TON_SITE.com")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=kb)
 
 
 # ==========================================
-# 1. /start (HOME)
+# 2. /start (HOME STYLE CHAINGPT)
 # ==========================================
 @dp.message(Command("start"))
 async def start(message: types.Message):
     user_id = message.from_user.id
-    
-    # Récupérer le score (0 si nouveau joueur)
     score = user_scores.get(user_id, 0)
     
-    await message.answer(
-        f"🔥 **Prompt Fight Arena** 🔥\n\n"
-        f"Welcome, {message.from_user.first_name}!\n"
-        f"Current Score: **{score} pts**\n\n"
-        f"Choose an action below:",
+    # METS L'URL DE TA BANNIERE ICI (image hightech de 1200x600px)
+    BANNER_URL = "https://REMPLACE_PAR_TON_IMAGE.com/banner.png" 
+    
+    # Texte formaté sous l'image
+    caption_text = (
+        f"⚡ **PROMPT FIGHT ARENA IS LIVE** ⚡\n\n"
+        f"Welcome to the most advanced AI Prompt Battleground on Telegram.\n\n"
+        f"🔥 *What you can do:*\n"
+        f"▪️ Battle against AI baselines\n"
+        f"▪️ Improve your copywriting skills\n"
+        f"▪️ Climb the Global Leaderboard\n\n"
+        f"👤 *Player:* {message.from_user.first_name}\n"
+        f"💎 *Current Score:* {score} pts\n\n"
+        f"_Tap a button below to begin._"
+    )
+    
+    # Envoi de la photo + texte + boutons
+    await message.answer_photo(
+        photo=BANNER_URL,
+        caption=caption_text,
         reply_markup=home_keyboard(),
         parse_mode="Markdown"
     )
 
+
 # ==========================================
-# ANCIENNE LOGIQUE DU FIGHT ( Gardée pour compatibilité avec la commande texte )
+# 3. COMBAT (Gestion des commandes et textes)
 # ==========================================
 @dp.message(Command("fight"))
 async def fight(message: types.Message):
@@ -69,6 +92,7 @@ async def fight(message: types.Message):
 
 @dp.message()
 async def handle_prompt(message: types.Message):
+    # On ignore si le joueur n'est pas en train de faire un combat
     if user_state.get(message.from_user.id) != "waiting_prompt":
         return
 
@@ -90,25 +114,25 @@ async def handle_prompt(message: types.Message):
         await message.answer(f"❌ Error scoring: {e}")
         return
 
-    # --- AJOUT TEMPORAIRE POUR LE SCORE ---
+    # Mise à jour du score temporaire
     user_id = message.from_user.id
-    user_scores[user_id] = user_scores.get(user_id, 0) + 10 # On ajoute 10 pts par victoire pour l'exemple
-    # --------------------------------------
-
+    user_scores[user_id] = user_scores.get(user_id, 0) + 10 
+    
     await message.answer(
         f"🔥 RESULT:\n\n{result}\n\n🏆 *+10 points earned !*\nTap /start to return to menu.", 
         parse_mode="Markdown"
     )
 
+    # Fin du combat
     user_state[message.from_user.id] = None
 
 
 # ==========================================
-# 3. CALLBACKS (Navigation)
+# 4. CALLBACKS (Navigation des boutons)
 # ==========================================
 @dp.callback_query(F.data == "menu_fight")
 async def callback_fight(callback: types.CallbackQuery):
-    # On supprime le message du menu pour faire de la place
+    # On supprime le message avec la bannière pour libérer l'écran du téléphone
     await callback.message.delete()
     user_state[callback.from_user.id] = "waiting_prompt"
     await callback.message.answer(CHALLENGE)
@@ -119,19 +143,18 @@ async def callback_stats(callback: types.CallbackQuery):
     user_id = callback.from_user.id
     score = user_scores.get(user_id, 0)
     
-    # On modifie le message du menu pour afficher les stats (sans le supprimer)
     text = (
         f"📊 **Your Stats**\n\n"
         f"Total Points: **{score} pts**\n"
         f"Fights Played: *Coming soon*\n"
         f"Win Rate: *Coming soon*"
     )
+    # edit_text modifie le texte sans effacer les boutons
     await callback.message.edit_text(text, reply_markup=home_keyboard(), parse_mode="Markdown")
     await callback.answer()
 
 @dp.callback_query(F.data == "menu_leaderboard")
 async def callback_leaderboard(callback: types.CallbackQuery):
-    # Ici tu pourras connecter une vraie BDD plus tard
     text = (
         "🏆 **Global Leaderboard**\n\n"
         "1. @UserA - 150 pts\n"
@@ -146,16 +169,17 @@ async def callback_leaderboard(callback: types.CallbackQuery):
 async def callback_daily(callback: types.CallbackQuery):
     text = (
         f"📅 **Daily Challenge**\n\n{CHALLENGE}\n\n"
-        f"*Use the ⚔️ Fight button to submit your prompt for this challenge!*"
+        f"*Use the 🚀 Enter the Arena button to submit your prompt for this challenge!*"
     )
     await callback.message.edit_text(text, reply_markup=home_keyboard(), parse_mode="Markdown")
     await callback.answer()
 
 
 # ==========================================
-# LANCEMENT DU BOT
+# 5. LANCEMENT DU BOT
 # ==========================================
 async def main():
+    print("Bot démarré avec succès !")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
