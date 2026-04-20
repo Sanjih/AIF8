@@ -16,7 +16,7 @@ async def start(message: types.Message):
     # LE BOUTON MAGIQUE QUI OUVRE L'INTERFACE WEB
     builder.button(
         text="🚀 Ouvrir Prompt Arena", 
-        web_app=TelegramWebAppInfo(url="https://TON-DOMAINE-ICI.com") # <--- REMPLACE ICI
+        web_app=TelegramWebAppInfo(url="https://observed-nova-quality-cake.trycloudflare.com") # <--- REMPLACE ICI
     )
     
     await message.answer(
