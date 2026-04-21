@@ -10,11 +10,10 @@ dp = Dispatcher()
 
 @dp.message(Command("start"))
 async def start(message: types.Message):
-    # Construction du bouton avec le lien Web App
     kb = [
         [InlineKeyboardButton(
             text="🚀 Ouvrir Prompt Arena", 
-            web_app=TelegramWebAppInfo(url="https://TON-LIEN-CLOUDFLARE-ICI.trycloudflare.com") # <--- REMETS TON VRAI LIEN ICI
+            web_app=WebAppInfo(url="https://upload-para-visual-children.trycloudflare.com") # <--- METS TON VRAI LIEN ICI
         )]
     ]
     reply_markup = InlineKeyboardMarkup(inline_keyboard=kb)
