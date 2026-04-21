@@ -13,7 +13,7 @@ async def start(message: types.Message):
     kb = [
         [InlineKeyboardButton(
             text="🚀 Ouvrir Prompt Arena", 
-            web_app=WebAppInfo(url="https://upload-para-visual-children.trycloudflare.com") # <--- METS TON VRAI LIEN ICI
+            web_app=WebAppInfo(url="https://impressive-polo-thomas-collapse. trycloudflare.com") # <--- METS TON VRAI LIEN ICI
         )]
     ]
     reply_markup = InlineKeyboardMarkup(inline_keyboard=kb)
