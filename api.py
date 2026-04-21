@@ -6,7 +6,6 @@ from scoring import score_outputs
 
 app = FastAPI()
 
-# Permettre au Web App de communiquer avec l'API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,12 +13,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-CHALLENGE = """
-OBJECTIVE:
-Write a prompt that generates a high-converting sales page
-for an ebook: "Learn ChatGPT in 7 days"
-"""
 
 BASELINE_PROMPT = """
 Write a simple sales page for an ebook called 
@@ -34,7 +27,10 @@ async def start_fight(request: FightRequest):
     try:
         user_output = generate_output(request.user_prompt)
         baseline_output = generate_output(BASELINE_PROMPT)
-        result = score_outputs(user_output, baseline_output)
+        
+        # ON ENVOIE MAINTENANT LE PROMPT EN PLUS DES TEXTES
+        result = score_outputs(request.user_prompt, user_output, baseline_output)
+        
         return {"success": True, "result": result}
     except Exception as e:
         return {"success": False, "error": str(e)}
