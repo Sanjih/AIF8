@@ -22,7 +22,7 @@ Write a simple sales page for an ebook called
 # 🆕 On met à jour le "modèle" de données attendues
 class FightRequest(BaseModel):
     user_prompt: str
-    user_id: str = "inconnu"
+    user_id: int = 0  # <-- On met "int" pour nombre au lieu de "str" pour texte
     user_name: str = "Anonyme"
 
 @app.post("/api/fight")
