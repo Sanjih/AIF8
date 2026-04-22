@@ -19,16 +19,22 @@ Write a simple sales page for an ebook called
 'Learn ChatGPT in 7 days'.
 """
 
+# 🆕 On met à jour le "modèle" de données attendues
 class FightRequest(BaseModel):
     user_prompt: str
+    user_id: str = "inconnu"
+    user_name: str = "Anonyme"
 
 @app.post("/api/fight")
 async def start_fight(request: FightRequest):
+    
+    # 🆕 On affiche qui joue dans les logs du serveur (pour vérifier que ça marche)
+    print(f"⚔️ NOUVEAU COMBAT ! Joueur : {request.user_name} (ID: {request.user_id})")
+    
     try:
         user_output = generate_output(request.user_prompt)
         baseline_output = generate_output(BASELINE_PROMPT)
         
-        # ON ENVOIE MAINTENANT LE PROMPT EN PLUS DES TEXTES
         result = score_outputs(request.user_prompt, user_output, baseline_output)
         
         return {"success": True, "result": result}
