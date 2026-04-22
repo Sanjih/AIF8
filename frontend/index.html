@@ -59,12 +59,19 @@
 
     <div id="result-box"></div>
 
-    <script>
+        <script>
         const tg = Telegram.WebApp;
         tg.expand();
 
-        // REMPLACE LA LIGNE CI-DESSOUS PAR TON VRAI DOMAINE EX: https://monbot.com/api/fight
-        const API_URL ="https://impressive-polo-thomas-collapse.trycloudflare.com/api/fight"; 
+        // 🆕 MAGIE : On récupère les infos de l'utilisateur envoyées par Telegram
+        const user = tg.initDataUnsafe.user;
+        const userId = user ? user.id : "inconnu";
+        const userName = user ? user.first_name : "Anonyme";
+
+        // On peut même afficher un petit bonjour personnalisé !
+        document.getElementById("welcome-text").innerText = `Welcome back, ${userName} !`;
+
+        const API_URL = "https://TON-LIEN-CLOUDFLARE-ICI.trycloudflare.com/api/fight"; 
 
         async function startFight() {
             const prompt = document.getElementById("prompt-input").value;
@@ -82,7 +89,12 @@
                 const response = await fetch(API_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ user_prompt: prompt })
+                    // 🆕 On envoie le prompt, MAIS AUSSI l'ID et le nom du joueur !
+                    body: JSON.stringify({ 
+                        user_prompt: prompt,
+                        user_id: userId,
+                        user_name: userName
+                    })
                 });
                 
                 const data = await response.json();
@@ -94,7 +106,7 @@
                     alert("Error: " + data.error);
                 }
             } catch (e) {
-                alert("Network error. Is the API running?");
+                alert("ERREUR: " + e.message);
             } finally {
                 btn.disabled = false;
                 loader.style.display = "none";
