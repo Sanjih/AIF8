@@ -8,7 +8,7 @@ sleep 2
 
 echo "🌐 Lancement du tunnel Cloudflare..."
 # On lance cloudflared en arrière-plan et on cache les logs dans un fichier temporaire
-cloudflared tunnel --url http://localhost:80 > /tmp/cloudflare.log 2>&1 &
+/root/cloudflared tunnel --url http://localhost:80 > /tmp/cloudflare.log 2>&1 &
 
 echo "⏳ Attente de la génération de l'URL sécurisée (5 secondes)..."
 sleep 5
