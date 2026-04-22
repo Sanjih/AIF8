@@ -18,7 +18,6 @@
             padding: 15px; width: 100%; max-width: 400px; margin-bottom: 20px;
             font-size: 14px; color: #ccc; box-sizing: border-box;
         }
-            <div id="welcome-text" class="subtitle">Chargement...</div>
         textarea {
             width: 100%; max-width: 400px; height: 120px; background: #1e1e2e;
             border: 1px solid #00f3ff; border-radius: 10px; padding: 15px;
@@ -46,7 +45,7 @@
 <body>
 
     <h1>⚡ PROMPT ARENA</h1>
-    <div class="subtitle">ChainGPT Style Web App</div>
+    <div id="welcome-text" class="subtitle">Chargement...</div>
 
     <div class="challenge-box">
         <strong>🎯 CHALLENGE:</strong><br>
@@ -64,16 +63,16 @@
         const tg = Telegram.WebApp;
         tg.expand();
 
-        // 🆕 MAGIE : On récupère les infos de l'utilisateur envoyées par Telegram
+        // 1. Récupération des infos joueur
         const user = tg.initDataUnsafe.user;
         const userId = user ? user.id : "inconnu";
         const userName = user ? user.first_name : "Anonyme";
-
-        // On peut même afficher un petit bonjour personnalisé !
         document.getElementById("welcome-text").innerText = `Welcome back, ${userName} !`;
 
-        const API_URL = "https://TON-LIEN-CLOUDFLARE-ICI.trycloudflare.com/api/fight"; 
+        // 2. Définition de l'URL AVANT la fonction (très important)
+        const API_URL = "https://EMPLACEMENT-DU-LIEN.trycloudflare.com/api/fight"; 
 
+        // 3. La fonction de combat
         async function startFight() {
             const prompt = document.getElementById("prompt-input").value;
             if (!prompt) return alert("Enter a prompt!");
@@ -90,7 +89,6 @@
                 const response = await fetch(API_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    // 🆕 On envoie le prompt, MAIS AUSSI l'ID et le nom du joueur !
                     body: JSON.stringify({ 
                         user_prompt: prompt,
                         user_id: userId,
