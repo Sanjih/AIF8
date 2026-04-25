@@ -1,0 +1,14 @@
+LECON 1 : LA REGLE DU "SO WHAT?" (Et alors ?)
+Ne donne jamais juste une caractéristique. Donne le bénéfice.
+Mauvais : "Cette chaussure a une semelle en carbone."
+Bon : "Cette semelle en carbone te fait gagner 2 minutes sur votre marathon."
+Le prompt idéal doit forcer l'IA à traduire les caractéristiques en bénéfices.
+
+LECON 2 : L'URGENCE N'EST PAS UNE OPTION
+Un texte de vente sans urgence est un texte mort. L'IA doit générer une raison d'acheter MAINTENANT.
+Exemple : "Offre valable 24h", "Plus que 3 places", "Prix qui augmente demain".
+Le prompt idéal doit explicitement demander de créer une rareté ou une urgence.
+
+LECON 3 : STRUCTURE PAS A PAS
+Ne laisse jamais l'IA générer un bloc de texte monolithique.
+Le prompt idéal doit demander : "Fais un titre accrocheur. Ensuite 3 bullet points. Ensuite une conclusion avec appel à l'action."
