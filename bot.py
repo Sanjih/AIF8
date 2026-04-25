@@ -11,10 +11,8 @@ dp = Dispatcher()
 @dp.message(Command("start"))
 async def start(message: types.Message):
     kb = [
-        [InlineKeyboardButton(
-            text="🚀 Ouvrir Prompt Arena", 
-            web_app=WebAppInfo(url="https://impressive-polo-thomas-collapse.trycloudflare.com?v=2") # <--- METS TON VRAI LIEN ICI
-        )]
+        [InlineKeyboardButton(text="⚔️ Arena (Fight)", web_app=WebAppInfo(url="https://TUNNEL_PLACEHOLDER.trycloudflare.com/index.html"))],
+        [InlineKeyboardButton(text="💡 AI Coach", web_app=WebAppInfo(url="https://TUNNEL_PLACEHOLDER.trycloudflare.com/coach.html"))]
     ]
     reply_markup = InlineKeyboardMarkup(inline_keyboard=kb)
     
