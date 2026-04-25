@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from ai import generate_output
 from scoring import score_outputs
+import requests
+from config import OPENROUTER_API_KEY, HEADERS
 
 app = FastAPI()
 
