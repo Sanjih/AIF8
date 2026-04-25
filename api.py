@@ -40,3 +40,55 @@ async def start_fight(request: FightRequest):
         return {"success": True, "result": result}
     except Exception as e:
         return {"success": False, "error": str(e)}
+
+# ---------------------------------------------------------
+# NOUVEAU MODULE : LE COACH (Guide Touristique)
+# ---------------------------------------------------------
+
+def ask_coach(user_idea: str) -> str:
+    # 1. Le serveur lit le fichier de leçons
+    try:
+        with open("lecons.txt", "r", encoding="utf-8") as f:
+            lecons = f.read()
+    except Exception:
+        lecons = "Aucune leçon disponible."
+
+    # 2. Le prompt du "Guide Touristique"
+    prompt = f"""
+    Tu es un guide touristique expert en copywriting et en "Prompt Engineering".
+    Voici le manuel de formation du joueur :
+    ---
+    {lecons}
+    ---
+    
+    Le joueur a cette idée vague : "{user_idea}"
+    
+    Ta mission : En te basant STRICTEMENT sur les leçons du manuel, donne-lui 2 ou 3 phrases d'orientation ultra-courtes pour l'aider à transformer son idée en un excellent prompt. 
+    Ne génère pas le texte de vente. Donne juste le conseil d'orientation.
+    Sois bref et direct.
+    """
+
+    data = {
+        "model": "openai/gpt-4o-mini",
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": 0.3
+    }
+
+    response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=HEADERS, json=data)
+    
+    if response.status_code != 200:
+        raise Exception(f"API Error: {response.text}")
+
+    result = response.json()
+    return result["choices"][0]["message"]["content"]
+
+class CoachRequest(BaseModel):
+    user_idea: str
+
+@app.post("/api/coach")
+async def coach_endpoint(request: CoachRequest):
+    try:
+        advice = ask_coach(request.user_idea)
+        return {"success": True, "advice": advice}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
