@@ -37,7 +37,7 @@
         const userId = user ? user.id : "inconnu";
         const userName = user ? user.first_name : "Anonyme";
         document.getElementById("welcome-text").innerText = "Welcome back, " + userName + " !";
-        const API_URL = "https://placeholder.com/api/fight"; 
+        const API_URL = "https://TUNNEL_PLACEHOLDER.trycloudflare.com/api/fight"; 
 
         async function startFight() {
             const prompt = document.getElementById("prompt-input").value;
