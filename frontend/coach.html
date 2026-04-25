@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Arena - Coach</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0a0a0f; color: #ffffff; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        h1 { color: #8b5cf6; text-shadow: 0 0 10px #8b5cf6; margin-bottom: 5px; }
+        .subtitle { color: #888; margin-bottom: 30px; font-size: 14px; }
+        textarea { width: 100%; max-width: 400px; height: 100px; background: #1e1e2e; border: 1px solid #8b5cf6; border-radius: 10px; padding: 15px; color: white; font-size: 16px; resize: none; box-sizing: border-box; }
+        button { margin-top: 20px; padding: 15px 40px; font-size: 18px; font-weight: bold; background: linear-gradient(90deg, #8b5cf6, #ec4899); color: #fff; border: none; border-radius: 30px; cursor: pointer; }
+        button:disabled { background: #333; color: #666; cursor: not-allowed; }
+        #result-box { display: none; margin-top: 30px; background: #12121a; border: 1px solid #8b5cf6; border-radius: 10px; padding: 20px; width: 100%; max-width: 400px; box-sizing: border-box; white-space: pre-wrap; font-size: 14px; }
+        .loader { border: 4px solid #333; border-top: 4px solid #8b5cf6; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin-top: 20px; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <h1>💡 AI COACH</h1>
+    <div class="subtitle">Explique ton idée, je te guide selon les leçons.</div>
+    
+    <textarea id="idea-input" placeholder="Ex: Je veux vendre une formation en graphisme..."></textarea>
+    <button id="coach-btn" onclick="getAdvice()">📍 Obtenir un conseil</button>
+    <div id="loader" class="loader"></div>
+    <div id="result-box"></div>
+
+    <script>
+        const tg = Telegram.WebApp;
+        tg.expand();
+        
+        // ON MET UN PLACEHOLDER GENERIC, LE SCRIPT START.SH LE REMPLACERA
+        const API_URL = "https://TUNNEL_PLACEHOLDER.trycloudflare.com/api/coach"; 
+
+        async function getAdvice() {
+            const idea = document.getElementById("idea-input").value;
+            if (!idea) return alert("Dis-moi ton idée !");
+
+            const btn = document.getElementById("coach-btn");
+            const loader = document.getElementById("loader");
+            const resultBox = document.getElementById("result-box");
+
+            btn.disabled = true;
+            loader.style.display = "block";
+            resultBox.style.display = "none";
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ user_idea: idea })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultBox.innerHTML = "💡 **Conseil du Coach :**\n\n" + data.advice;
+                    resultBox.style.display = "block";
+                } else {
+                    alert("Erreur: " + JSON.stringify(data));
+                }
+            } catch (e) {
+                alert("ERREUR RESEAU: " + e.message);
+            } finally {
+                btn.disabled = false;
+                loader.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
